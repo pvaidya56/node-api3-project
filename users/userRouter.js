@@ -6,7 +6,14 @@ const Posts = require("../posts/postDb");
 const router = express.Router();
 
 router.post('/', (req, res) => {
-  // do your magic!
+  Users.insert(req.body)
+  .then(response => {
+    res.status(201).json(response)
+  })
+  .catch(error => {
+    console.log(error)
+    res.status(500).json({error: "error creating user"})
+  })
 });
 
 router.post('/:id/posts', validateUserId, (req, res) => {
@@ -65,7 +72,7 @@ router.get('/:id/posts', validateUserId, (req, res) => {
 
 router.delete('/:id', validateUserId, (req, res) => {
   Users.remove(req.params.id)
-    .then(res => {
+    .then(response => {
       res.status(200).json({message: "User has been deleted"})
     })
     .catch(error => {
